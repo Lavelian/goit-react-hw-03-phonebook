@@ -8,9 +8,9 @@ export class App extends Component {
     filter: '',
   };
   componentDidMount() {
-    const savedContacts = JSON.parse(localStorage.getItem(LS_KEY));
-    if (savedContacts.length) {
-      this.setState({ contacts: savedContacts });
+    const contacts = JSON.parse(localStorage.getItem(LS_KEY));
+    if (contacts.length) {
+      this.setState({ contacts });
     }
   }
   componentDidUpdate(prevProbs, prevState) {
