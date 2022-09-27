@@ -10,9 +10,7 @@ export class App extends Component {
   componentDidMount() {
     const contacts = JSON.parse(localStorage.getItem(LS_KEY));
 
-    if (!contacts || !contacts.length) {
-      return;
-    } else {
+    if (contacts && contacts.length) {
       this.setState({ contacts });
     }
   }
@@ -24,7 +22,8 @@ export class App extends Component {
     }
   }
   formSubmitHandler = ({ name, number }) => {
-    if (!(name && number)) {
+    const { isDuplicate } = this;
+    if (isDuplicate(name, number)) {
       return;
     }
     this.setState(prevState => {
@@ -61,6 +60,15 @@ export class App extends Component {
     this.setState({
       [name]: value,
     });
+  };
+
+  isDuplicate = (name, number) => {
+    const { contacts } = this.state;
+
+    const result = contacts.find(
+      contact => contact.name === name && contact.number === number
+    );
+    return result;
   };
 
   render() {
