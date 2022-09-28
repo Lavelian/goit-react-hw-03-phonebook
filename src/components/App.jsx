@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
 import SectionPhoneBook from './SectionPhoneBook/';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const LS_KEY = 'contacts';
 export class App extends Component {
   state = {
@@ -22,9 +24,9 @@ export class App extends Component {
     }
   }
   formSubmitHandler = ({ name, number }) => {
-    const { isDuplicate } = this;
+    const { isDuplicate, notify } = this;
     if (isDuplicate(name, number)) {
-      return;
+      return notify();
     }
     this.setState(prevState => {
       return {
@@ -65,11 +67,11 @@ export class App extends Component {
   isDuplicate = (name, number) => {
     const { contacts } = this.state;
 
-    const result = contacts.find(
+    return contacts.find(
       contact => contact.name === name && contact.number === number
     );
-    return result;
   };
+  notify = () => toast('There is already a contact');
 
   render() {
     const { filter } = this.state;
@@ -77,14 +79,17 @@ export class App extends Component {
       this;
     const filteredContacts = getFilteredContacts();
     return (
-      <SectionPhoneBook
-        title={'PhoneBook'}
-        OnSubmit={formSubmitHandler}
-        filteredContacts={filteredContacts}
-        filter={filter}
-        handleChange={handleChange}
-        removeBook={removeBook}
-      />
+      <>
+        <SectionPhoneBook
+          title={'PhoneBook'}
+          OnSubmit={formSubmitHandler}
+          filteredContacts={filteredContacts}
+          filter={filter}
+          handleChange={handleChange}
+          removeBook={removeBook}
+        />
+        <ToastContainer />
+      </>
     );
   }
 }
